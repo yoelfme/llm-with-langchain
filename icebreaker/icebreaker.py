@@ -1,16 +1,20 @@
 from langchain.prompts.prompt import PromptTemplate
 from langchain.chains import LLMChain
 from langchain_openai import ChatOpenAI
-from thidparties.linkedin import scrape_linkedin_profile
 
-information = """
-    Elon Musk is a business magnate, industrial designer, and engineer. He is the founder, CEO, CTO, and chief designer of SpaceX; early investor, CEO, and product architect of Tesla, Inc.; founder of The Boring Company; co-founder of Neuralink; and co-founder and initial co-chairman of OpenAI. A centibillionaire, Musk is one of the richest people in the world.
-"""
+from thidparties.linkedin import scrape_linkedin_profile
+from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
 
 if __name__ == "__main__":
     print("Icebreaker is running...")
 
-    linkedin_data = scrape_linkedin_profile("https://www.linkedin.com/in/elonmusk/")
+    linkedin_profile_url = linkedin_lookup_agent('Eden Marco')
+
+    # if the linkedin_profile_url is not a valid url, then we need to stop the program
+    if "linkedin.com" not in linkedin_profile_url:
+        raise ValueError("The LinkedIn profile URL is not valid")
+
+    linkedin_data = scrape_linkedin_profile(linkedin_profile_url)
 
     summary_template = """
         given the information {information} about a person from I want you to create:
