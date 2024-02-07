@@ -7,10 +7,10 @@ from langchain_openai import ChatOpenAI
 from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
 from thidparties.linkedin import scrape_linkedin_profile
 from thidparties.twitter import scrape_user_tweets
-from output_parsers import person_intel_parser
+from output_parsers import person_intel_parser, PersonIntel
 
 
-def ice_break(name: str) -> str:
+def ice_break(name: str) -> tuple[PersonIntel, str]:
     linkedin_profile_url = linkedin_lookup_agent(name=name)
 
     # if the linkedin_profile_url is not a valid url, then we need to stop the program
@@ -43,7 +43,7 @@ def ice_break(name: str) -> str:
 
     output = chain.invoke({"information": linkedin_data})
 
-    return person_intel_parser.parse(output["text"])
+    return person_intel_parser.parse(output["text"]), linkedin_data.get("profile_pic_url")
 
 
 if __name__ == "__main__":

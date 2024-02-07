@@ -22,11 +22,7 @@ def lookup(name: str) -> str:
     prompt = hub.pull("hwchase17/react")
 
     agent_tools = [
-        Tool(
-            name="Crawl Google for LinkedIn profile page",
-            description="Useful for when you need to get the LinkedIn profile URL",
-            func=get_profile_url,
-        )
+        get_profile_url
     ]
 
     agent = create_react_agent(

@@ -20,7 +20,8 @@ def scrape_linkedin_profile(linkedin_profile_url: str):
     }, headers=headers)
 
     if response.status_code != 200:
-        raise Exception("LinkedIn scraper is not running")
+        print(response.text)
+        raise Exception("LinkedIn scraper failed to fetch data.")
 
     return clean_linkedin_data(response.json())
 
