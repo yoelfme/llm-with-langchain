@@ -15,6 +15,10 @@ def lookup(name: str) -> str:
     """Lookup the LinkedIn URL of a person based on their name"""
     llm = ChatOpenAI(temperature=0, model_name="gpt-3.5-turbo-1106")
 
+    template = """given the full name {name_of_person} I want you to get me a link to their
+    LinkedIn profile page. Your answer should contain only a URL"""
+    prompt_template = PromptTemplate.from_template(template)
+
     prompt = hub.pull("hwchase17/react")
 
     agent_tools = [
@@ -38,7 +42,7 @@ def lookup(name: str) -> str:
     )
 
     linkedin_url = agent_executor.invoke({
-        "input": f'Give me the LinkedIn profile URL of {name}, your answer should contain only the URL'
+        "input": template.format(name_of_person=name)
     })
 
     return linkedin_url['output']

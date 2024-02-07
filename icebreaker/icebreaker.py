@@ -1,17 +1,20 @@
+import urllib.parse
+
 from langchain.prompts.prompt import PromptTemplate
 from langchain.chains import LLMChain
 from langchain_openai import ChatOpenAI
 
 from thidparties.linkedin import scrape_linkedin_profile
+from thidparties.twitter import scrape_user_tweets
 from agents.linkedin_lookup_agent import lookup as linkedin_lookup_agent
 
 if __name__ == "__main__":
     print("Icebreaker is running...")
 
-    linkedin_profile_url = linkedin_lookup_agent('Eden Marco')
+    linkedin_profile_url = linkedin_lookup_agent("Yoel Monzon")
 
     # if the linkedin_profile_url is not a valid url, then we need to stop the program
-    if "linkedin.com" not in linkedin_profile_url:
+    if not urllib.parse.urlparse(linkedin_profile_url).scheme:
         raise ValueError("The LinkedIn profile URL is not valid")
 
     linkedin_data = scrape_linkedin_profile(linkedin_profile_url)
@@ -30,8 +33,6 @@ if __name__ == "__main__":
 
     chain = LLMChain(prompt=summary_prompt_template, llm=llm)
 
-    output = chain.invoke({
-        "information": linkedin_data
-    })
+    output = chain.invoke({"information": linkedin_data})
 
-    print(output['text'])
+    print(output["text"])
